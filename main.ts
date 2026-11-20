@@ -31,13 +31,30 @@
 //     delay (the 15:38 snapshot puts typical delays at ~3-5 days). A straight
 //     line fitted to the last 24 hours therefore UNDER-forecasts the rise over
 //     the next 4.5 days, worst for late trophies. The model corrects for that
-//     with an acceleration term, +1.0 logit x LATENESS, on the median. It was
+//     with an acceleration term, +0.5 logit x LATENESS, on the median. It was
 //     validated on synthetic finals built from a cohort/delay model fitted to
 //     the real launch-night and 15:38 UTC snapshots: the correction wins in
 //     13 of 16 worlds spanning sharper/flatter curves and faster/slower
 //     player growth (mean loss 0.28 vs 0.42 for the uncorrected line), and the
 //     plain line is kept as the base so the correction is an adjustment, not
 //     the forecast.
+//
+//     v3 (20 Nov 2026): the acceleration term was cut from +1.0 to +0.5.
+//     The live Exophase page refreshed on 20 Nov ~07:00 UTC (first refresh
+//     since the 15:38 UTC snapshot): all 55 rates moved, mean logit change
+//     -0.575 (41/55 down, median -1.099) — far BELOW the DGP's 28h band
+//     (mean +0.46). Dilution is far stronger than the DGP assumed
+//     (earner-monotonicity implies N(30h)/N(15.6h) >= 7, vs 1.3-1.7x in the
+//     DGP), while early-trophy earners grew far faster (Ch1 0.73% -> 7.99%,
+//     fishing 1.89% -> 10.57%). Refitting the cohort/delay DGP to BOTH
+//     snapshots (launch + 15:38 + ~30h live) and re-scoring: bias 0.5 beats
+//     1.0 in 12/12 live-consistent synthetic worlds (refit mean 0.659 vs
+//     0.857; mild-dilution mean 0.287 vs 0.343) and on the combined
+//     old+refit set (0.490 vs 0.559). The old worlds (fitted to two
+//     snapshots only) still favour 1.0 (0.260 vs 0.322) but their N-growth
+//     is falsified by the live page. The practice score is unchanged by the
+//     bias (flat-history branch: 0.1490 mean / 0.1931 worst for every bias).
+//     See VERIFICATION.md (v3 section) and trophy-val/dgp4.py.
 //
 // The model, per case:
 //   1. Collapse the history to its DISTINCT states (consecutive identical
@@ -159,7 +176,7 @@ const LATE_SHAPE = 5.0;
 
 // Trend branch constants.
 const RECENT_HOURS = 24; // fit window for the per-trophy line
-const ACCEL_BIAS = 1.0; // logit added to the median, times LATENESS
+const ACCEL_BIAS = 0.5; // logit added to the median, times LATENESS (v3: cut from 1.0 on 20 Nov live-page evidence, see header)
 const SPREAD_SCALE = 0.8; // times the house curve baseline's spread
 const RANDOM_WALK_SIGMA = 0.5; // logit spread per sqrt(day), as the baseline
 const FLAT_JUMP_SIGMA = 0.48; // extra spread: a refresh not yet seen

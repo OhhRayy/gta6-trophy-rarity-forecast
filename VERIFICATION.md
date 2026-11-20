@@ -90,6 +90,29 @@
   step before the deadline; if day-2 rates are far below the DGP, lower
   ACCEL_BIAS toward 0.5–0.7.
 
+## v3 — 20 Nov 2026 ~14:15 WIB (ACCEL_BIAS 1.0 -> 0.5)
+- Live Exophase page refreshed between 03:59 UTC (still frozen) and 07:00 UTC.
+  All 55 rates moved vs the 15:38 snapshot (sum 106.12 -> 126.53); mean dlogit
+  -0.575 (41/55 down, median -1.099) vs the DGP 28h band mean +0.46 — the
+  trigger set in the day-2 note fired. Ch1 0.73 -> 7.99%, fishing 1.89 ->
+  10.57% (both far ABOVE the DGP band: early earners grew far faster than the
+  DGP), arcade 0.41 -> 1.11% (below band), final 0.06 -> 0.02%. Dilution is
+  far stronger than the DGP assumed: earner-monotonicity implies
+  N(30h)/N(15.6h) >= 7 (vs 1.3-1.7x in the DGP).
+- Refit (trophy-val/dgp4.py): cohort/delay DGP refitted to BOTH snapshots
+  (15:38 + live ~30h); bias sweep on the refit synthetic finals: 0.5 beats
+  1.0 in 12/12 live-consistent worlds (refit mean 0.659 vs 0.857; mild-3x
+  dilution 0.287 vs 0.343); combined old+refit 0.490 vs 0.559. Old worlds
+  still favour 1.0 (0.260 vs 0.322) but their N-growth is falsified.
+  Practice score is IDENTICAL for every bias (0.1490/0.1931) — the practice
+  cases have flat histories so the trend branch (and ACCEL_BIAS) never runs;
+  the practice gate therefore ties rather than discriminates.
+- Repo: main.ts (ACCEL_BIAS 0.5) + README + this section. Practice outputs
+  valid, deterministic (two runs byte-identical). Full detail:
+  trophy-val/day2_recheck_20261120_pm.md.
+- Force_Last: submitting v3 replaces v2 as the final entry. A last re-check
+  is still needed Sat 21 Nov morning before the 18:30 WIB deadline.
+
 ## Status / blocker
 - Entry built + verified. NOT submitted: bundle + submit is the parent
   agent's step (this subagent cannot bundle/submit its own run — the usage
